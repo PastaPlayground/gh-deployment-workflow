@@ -1,0 +1,29 @@
+name: Static page deployment
+run-name: ${{ github.actor }} is shipping code with GitHub Actions 🚀
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "src/index.html"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  Deploy-Pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+#        if: github.ref == "refs/head/main"
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./src
